@@ -1,12 +1,31 @@
 import React from 'react';
 import { Table, Button,Layout, } from "antd";
+import Column from 'antd/lib/table/Column';
+import { useQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+
 import './App.css';
 import 'antd/dist/antd.css';
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-import Column from 'antd/lib/table/Column';
+
 
 const { Header, Footer, Content } = Layout;
+
+const GET_ORGANISATION_DETAILS = gql `query{
+  ngo{
+    name
+    admin_email
+    id
+  }
+}`;
+
+
+function fetchorganisation() {
+  const { loading, error, data } = useQuery(GET_ORGANISATION_DETAILS);
+  if (loading)  return <div>Loading</div>
+  if (error) return <div>error</div>
+  return <div>{data}</div>
+}
+
 
 class App extends React.Component {
   constructor(props) {
@@ -20,12 +39,17 @@ class App extends React.Component {
         id: 1
       }],
     };
-    this.generateTable = this.generateTable.bind(this); 
-    this.rejectClicked = this.rejectClicked.bind(this);
-    this.approveClicked = this.approveClicked.bind(this);
-    this.downloadClicked = this.downloadClicked.bind(this);
+    // this.generateTable = this.generateTable.bind(this); 
+    // this.rejectClicked = this.rejectClicked.bind(this);
+    // this.approveClicked = this.approveClicked.bind(this);
+    // this.downloadClicked = this.downloadClicked.bind(this);
+    // this.fetchorganisation = this.fetchorganisation.bind(this);
   }
   
+  componentDidMount(){
+    // this.fetchorganisation()
+  }
+
   generateTable() {
     return <Table dataSource={this.state.dataSource}>
       <Column title="Organisation" dataIndex="name" key="name"></Column>
@@ -64,27 +88,7 @@ class App extends React.Component {
   downloadClicked = (id) => {
     console.log("Download clicked id : ",id);
   }
-  // firestoreTrial() {
-  //   db.collection('apps').limit(1).get().then((snapshot) => {
-  //     console.log(snapshot.app_url);
-  //   })
-  //   return;
-  // }
   render() {
-    
-    var firebaseConfig = {
-      apiKey: "AIzaSyA2TrPvnDvTCTkiRUFBkvCXHu1pJ4LWEog",
-      authDomain: "tech-for-cities.firebaseapp.com",
-      databaseURL: "https://tech-for-cities.firebaseio.com",
-      projectId: "tech-for-cities",
-      storageBucket: "tech-for-cities.appspot.com",
-      messagingSenderId: "188239670513",
-      appId: "1:188239670513:web:5fcf563a6811a0c7b30d50"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    var db = firebase.firestore();
-
     return (
       <Layout>
         <Header>
@@ -93,8 +97,10 @@ class App extends React.Component {
           </span>
         </Header>
         <Content className="App">
-          <div class="table-pane">
-            {this.generateTable()}
+          <div className="table-pane">
+            {this.fetchorganisation()}
+
+            {/* {this.generateTable()} */}
           </div>
         </Content>
         <Footer></Footer>
