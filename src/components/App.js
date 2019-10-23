@@ -15,6 +15,7 @@ const GET_ORGANISATION_DETAILS = gql`query{
     name
     admin_email
     id
+    status
   }
 }`;
 
