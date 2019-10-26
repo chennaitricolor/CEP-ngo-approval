@@ -17,23 +17,23 @@ export default class Dashboard extends React.Component {
   }
 
   async getOrgs(){
-    let res = await axios.get('http://localhost:4000/organisation/getList')
+    let res = await axios.get(`${constants.EXPRESS_URL}/organisation/getList`)
     let { ngo } = res.data.data;
     this.setState({ organisations: ngo });
   };
 
   async rejectClicked(id){
-    await axios.get(`http://localhost:4000/organisation/updateStatus/${id}?status=${constants.REJECTED}`)
+    await axios.get(`${constants.EXPRESS_URL}/organisation/updateStatus/${id}?status=${constants.REJECTED}`)
     this.getOrgs();
   }
   async approveClicked(id){
-    await axios.get(`http://localhost:4000/organisation/updateStatus/${id}?status=${constants.APPROVED}`)
+    await axios.get(`${constants.EXPRESS_URL}/organisation/updateStatus/${id}?status=${constants.APPROVED}`)
     this.getOrgs();
   }
 
   downloadFileToDisk(filePath){
     axios({
-      url: `http://localhost:4000/documents/${filePath}`,
+      url: `${constants.EXPRESS_URL}/documents/${filePath}`,
       method: 'GET',
       responseType: 'blob', // important
     }).then((response) => {
@@ -47,7 +47,7 @@ export default class Dashboard extends React.Component {
   }
 
   async downloadClicked(documentName){
-    var response = await axios.get(`http://localhost:4000/downloadFile/${documentName}`);
+    var response = await axios.get(`${constants.EXPRESS_URL}/downloadFile/${documentName}`);
     this.downloadFileToDisk(response.data);
   }
 
