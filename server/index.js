@@ -2,14 +2,16 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const azureStorage = require('azure-storage');
+const orgainsation = require('./hasuraClient');
 
-const app = express()
-app.use(cors())
+const app = express();
+app.use(cors());
 
-const tempDir = path.join(__dirname,'/../../temp');
-app.use('/documents',express.static(tempDir))
+const tempDir = path.join(__dirname,'/../temp');
+app.use('/documents',express.static(tempDir));
+app.use('/organisation', orgainsation);
 
-const port = 4000
+const port = 4000;
 
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();

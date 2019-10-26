@@ -1,28 +1,37 @@
 import React from "react";
 import { Table, Button, Tag } from "antd";
-import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag';
 import Column from 'antd/lib/table/Column';
 import axios from 'axios';
 import * as constants from '../constants';
 
-const APPROVE_OR_REJECT_ORGANISATION = gql`mutation update_ngo($status: String, $id:Int){  	
-    update_ngo( 
-      where:{id:{_eq:$id}},
-      _set:{status:$status}
-      ) {
-      returning{
-        id
-        status
-        name
-      }
-    } 
-  }`;
-
 export default class Dashboard extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.state = {
+      organisations: [] 
+    }
+  }
+  componentDidMount(){
+    this.getOrgs();
+  }
+
+  async getOrgs(){
+    let res = await axios.get('http://localhost:4000/organisation/getList')
+    let { ngo } = res.data.data;
+    this.setState({ organisations: ngo });
+  };
+
+  async rejectClicked(id){
+    await axios.get(`http://localhost:4000/organisation/updateStatus/${id}?status=${constants.REJECTED}`)
+    this.getOrgs();
+  }
+  async approveClicked(id){
+    await axios.get(`http://localhost:4000/organisation/updateStatus/${id}?status=${constants.APPROVED}`)
+    this.getOrgs();
+  }
+
   downloadFileToDisk(filePath){
-    console.log("@@@@@%%%%%%",filePath)
     axios({
       url: `http://localhost:4000/documents/${filePath}`,
       method: 'GET',
@@ -50,23 +59,15 @@ export default class Dashboard extends React.Component {
         return <Tag color="red"> {constants.REJECTED}</Tag>
       case constants.PENDING:
         return <div>
-          <Mutation mutation={APPROVE_OR_REJECT_ORGANISATION} variables={{ status: constants.REJECTED, id: record.id }}>
-            {(approveNGO) => (
-              <Button type="default" color="red" icon="close-circle" onClick={approveNGO}>Reject</Button>
-            )}
-          </Mutation>
-          <Mutation mutation={APPROVE_OR_REJECT_ORGANISATION} variables={{ status: constants.APPROVED, id: record.id }}>
-            {(rejectNGO) => (
-              <Button type="default" color="red" icon="close-circle" onClick={rejectNGO}>Approve</Button>
-            )}
-          </Mutation>
+          <Button type="default" color="red" icon="close-circle" onClick={() => this.rejectClicked(record.id)}>Reject</Button>
+          <Button type="default" color="red" icon="close-circle" onClick={() => this.approveClicked(record.id)}>Approve</Button>
         </div>
       default: return <Tag color="red"> error</Tag>
     }
   }
   render() {
     return (
-      <Table dataSource={this.props.organisations}>
+      <Table dataSource={this.state.organisations}>
         <Column title="Organisation" dataIndex="name" key="name"></Column>
         <Column title="Admin" dataIndex="admin_name" key="adminName"></Column>
         <Column title="Contact" dataIndex="admin_email" key="adminEmail"></Column>

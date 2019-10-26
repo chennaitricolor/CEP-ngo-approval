@@ -4,3 +4,4 @@ variables.sh
 src/server/temp
 *.txt
 temp/
+build/
