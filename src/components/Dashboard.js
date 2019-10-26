@@ -3,6 +3,7 @@ import { Table, Button, Tag } from "antd";
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag';
 import Column from 'antd/lib/table/Column';
+import axios from 'axios';
 import * as constants from '../constants';
 
 const APPROVE_OR_REJECT_ORGANISATION = gql`mutation update_ngo($status: String, $id:Int){  	
@@ -15,10 +16,31 @@ const APPROVE_OR_REJECT_ORGANISATION = gql`mutation update_ngo($status: String, 
         status
         name
       }
-    }
+    } 
   }`;
 
 export default class Dashboard extends React.Component {
+
+  downloadFileToDisk(filePath){
+    console.log("@@@@@%%%%%%",filePath)
+    axios({
+      url: `http://localhost:4000/documents/${filePath}`,
+      method: 'GET',
+      responseType: 'blob', // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filePath);
+      document.body.appendChild(link);
+      link.click();
+    });  
+  }
+
+  async downloadClicked(documentName){
+    var response = await axios.get(`http://localhost:4000/downloadFile/${documentName}`);
+    this.downloadFileToDisk(response.data);
+  }
 
   getStatusOfRecord(record) {
     switch (record.status) {
@@ -53,7 +75,7 @@ export default class Dashboard extends React.Component {
           key="doc_link"
           render={(text, record) => {
             return <div>
-              <Button type="default" icon="download" onClick={() => this.downloadClicked(record.id)}>Docs</Button>
+              <Button type="default" icon="download" onClick={() => this.downloadClicked(record.documents)}>Docs</Button>
             </div>
           }}>
         </Column>
