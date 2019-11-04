@@ -1,0 +1,10 @@
+version: "3.7"
+
+services:
+  web:
+    build: "."
+    image: cep-ngo-approval
+    ports:
+      - "4000:4000" # Server Port
+    environment:
+      

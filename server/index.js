@@ -5,7 +5,7 @@ const azureStorage = require('azure-storage');
 const orgainsation = require('./hasuraClient');
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 const STORAGE_ACCOUNT_NAME = process.env.AZURE_STORAGE_ACCOUNT_NAME;
 const ACCOUNT_ACCESS_KEY = process.env.AZURE_STORAGE_ACCOUNT_ACCESS_KEY;
 const AZURE_STORAGE_CONTAINER = process.env.AZURE_STORAGE_CONTAINER;
@@ -22,6 +22,13 @@ app.use(cors());
 
 if (process.env.NODE_ENV !== "production") {
     require("dotenv").config();
+    app.get('/', (req, res) => res.send('Hello World!'));
+} else {
+    app.use(express.static(path.join(__dirname, 'build')));
+    app.get('/', function(req, res) {
+        res.sendFile(path.join(__dirname, 'build', 'index.html'));
+    });
+
 }
 
 function getFile(blobName){
@@ -44,6 +51,5 @@ app.get('/downloadFile/:file',async (req,res)=> {
     res.send(fileName);
 });
 
-app.get('/', (req, res) => res.send('Hello World!'));
 
 app.listen(PORT, () => console.log(`Example app listening on PORT ${PORT}!`));
