@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2 delete all && pm2 start index.js --watch server --name 'server' | pm2 start cron/index.js --watch cron --name 'cron'",
-    "deploy":"pm2 start ecosystem.config.js"
+    "start": "pm2 delete all && pm2 start  index.js --no-daemon --watch server --name 'server' | pm2 start cron/index.js --watch cron --name 'cron'",
+    "deploy":"pm2 start ecosystem.config.js --no-daemon"
   },
   "dependencies": {
     "node-fetch": "^2.6.0",
