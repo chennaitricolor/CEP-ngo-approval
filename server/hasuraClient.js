@@ -1,13 +1,14 @@
 const { ApolloClient } = require('apollo-boost');
 const gql = require('graphql-tag');
 const express = require('express');
+const cors = require('cors');
 const fetch = require('node-fetch');
 const {createHttpLink} = require('apollo-link-http');
 const {InMemoryCache} = require('apollo-cache-inmemory');
 const { setContext } = require('apollo-link-context');
 
 const app = express.Router();
-
+app.use(cors());
 if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }

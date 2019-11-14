@@ -13,11 +13,11 @@ const azureStorageConfig = {
     accountName: STORAGE_ACCOUNT_NAME,
     accountKey: ACCOUNT_ACCESS_KEY,
 }; 
+app.use(cors());
 
-const TEMP_DIR = path.join(__dirname,'/../temp');
+const TEMP_DIR = path.join(__dirname,'/temp');
 app.use('/documents',express.static(TEMP_DIR));
 app.use('/organisation', orgainsation);
-app.use(cors());
 
 
 if (process.env.NODE_ENV !== "production") {
@@ -52,4 +52,4 @@ app.get('/downloadFile/:file',async (req,res)=> {
 });
 
 
-app.listen(PORT, () => console.log(`Example app listening on PORT ${PORT}!`));
+app.listen(PORT, () => console.log(`Server listening on PORT ${PORT}!`));
