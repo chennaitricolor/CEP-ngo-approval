@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  min-height: calc(100vh - 110px);
 }
 
 .App-logo {
@@ -31,4 +32,7 @@ color: white;
 font-size: 14px;
 font-weight: bold;
 width:100%
+}
+
+.ant-layout-content {
 }

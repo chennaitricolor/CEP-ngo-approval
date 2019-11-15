@@ -67,7 +67,7 @@ export default class Dashboard extends React.Component {
   }
   render() {
     return (
-      <Table dataSource={this.state.organisations}>
+      <Table dataSource={this.state.organisations} pagination={false}>
         <Column title="Organisation" dataIndex="name" key="name"></Column>
         <Column title="Admin" dataIndex="admin_name" key="adminName"></Column>
         <Column title="Contact" dataIndex="admin_email" key="adminEmail"></Column>

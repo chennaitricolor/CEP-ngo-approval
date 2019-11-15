@@ -1,0 +1,30 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "pm2 start  index.js --watch server --name 'server' | pm2 start cron/index.js --watch cron --name 'cron'",
+    "deploy": "pm2 start ecosystem.config.js --no-daemon"
+  },
+  "dependencies": {
+    "apollo-boost": "^0.4.4",
+    "apollo-cache-inmemory": "^1.6.3",
+    "apollo-link-context": "^1.0.19",
+    "apollo-link-http": "^1.5.16",
+    "azure-storage": "^2.10.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "graphql": "^14.5.8",
+    "graphql-tag": "^2.10.1",
+    "node-cron": "^2.0.3",
+    "node-fetch": "^2.6.0",
+    "pm2": "^4.1.2"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0"
+  },
+  "author": "Suryaprakash",
+  "license": "ISC"
+}
